@@ -1,7 +1,7 @@
 # run.py after training
 import numpy as np
 
-from src.neural_net import NeuralNetwork
+from src.neural_net1.neural_net import NeuralNetwork
 
 x = np.array(([1, 1, 1, 1, 1],
               [0, 0, 0, 0, 0]), dtype=float)

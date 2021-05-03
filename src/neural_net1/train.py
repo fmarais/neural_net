@@ -1,7 +1,7 @@
 import numpy as np
 
-from src.neural_net import NeuralNetwork
-from src.neural_net_helper import save_weights
+from src.neural_net1.neural_net import NeuralNetwork
+from src.neural_net1.neural_net_helper import save_weights
 
 # we can use an input matrix here eg.
 # currently only using a single feature

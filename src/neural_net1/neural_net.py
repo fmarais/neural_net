@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.neural_net_helper import load_weights, sigmoid_derivative, sigmoid
+from src.neural_net1.neural_net_helper import load_weights, sigmoid, sigmoid_derivative
 
 
 class NeuralNetwork:
