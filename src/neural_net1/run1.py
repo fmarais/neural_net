@@ -1,4 +1,4 @@
-# run.py after training
+# run1.py after training
 import numpy as np
 
 from src.neural_net1.neural_net import NeuralNetwork

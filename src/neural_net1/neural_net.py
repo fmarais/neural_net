@@ -80,6 +80,6 @@ class NeuralNetwork:
     def run(self, x, y):
         self.input = x
         self.init_output(y)
-        # run.py the input through the network
+        # run1.py the input through the network
         self.output = self.feedforward()
         self.backprop()
