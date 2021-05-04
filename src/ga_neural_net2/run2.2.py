@@ -3,9 +3,11 @@ import pygad
 import pygad.gann
 import pygad.nn
 
-
+# https://github.com/ahmedfgad/NeuralGenetic
 # multiple inputs
 # mulitple outputs
+from src.ga_neural_net2.neural_net_helper import save_population_networks, load_population_networks
+
 
 def fitness_func(solution, sol_idx):
     global GANN_instance, data_inputs, data_outputs
@@ -39,16 +41,24 @@ def callback_generation(_ga_instance):
 last_fitness = 0
 
 # Preparing the NumPy array of the inputs.
-data_inputs = numpy.array([[1, 1],
-                           [1, 0],
-                           [0, 1],
-                           [0, 0]])
+# data_inputs = numpy.array([[1, 1],
+#                            [1, 0],
+#                            [0, 1],
+#                            [0, 0]])
+data_inputs = numpy.array([[1, 1, 1],
+                           [1, 0, 1],
+                           [0, 1, 1],
+                           [0, 0, 1]])
 
 # Preparing the NumPy array of the outputs.
 data_outputs = numpy.array([0,
                             1,
                             1,
                             0])
+# data_outputs = numpy.array([[0, 1],
+#                             [1, 0],
+#                             [1, 0],
+#                             [0, 1]])
 
 # The length of the input vector for each sample (i.e. number of neurons in the input layer).
 num_inputs = data_inputs.shape[1]
@@ -81,26 +91,35 @@ population_vectors = pygad.gann.population_as_vectors(
 # initial population.
 # 2) Assign valid integer values to the sol_per_pop and num_genes parameters. If the
 # initial_population parameter exists, then the sol_per_pop and num_genes parameters are useless.
-initial_population = population_vectors.copy()
+saved_population_networks = load_population_networks("net2", 1)
+if saved_population_networks is None:
+    initial_population = population_vectors.copy()
+    num_parents_mating = 4  # Number of solutions to be selected as parents in the mating pool.
+    num_generations = 500  # Number of generations.
+    mutation_percent_genes = 5  # Percentage of genes to mutate. This parameter has no
+    # action if the parameter mutation_num_genes exists.
+    parent_selection_type = "sss"  # Type of parent selection.
+    crossover_type = "single_point"  # Type of the crossover operator.
+    mutation_type = "random"  # Type of the mutation operator.
+    keep_parents = 1  # Number of parents to keep in the next population.
+    # -1 means keep all parents and 0 means keep nothing.
+    init_range_low = -2
+    init_range_high = 5
+else:
+    initial_population = pygad.gann.population_as_vectors(
+        population_networks=saved_population_networks)
+    num_parents_mating = 4  # Number of solutions to be selected as parents in the mating pool.
+    num_generations = 1  # Number of generations.
+    mutation_percent_genes = 0  # Percentage of genes to mutate. This parameter has no
+    # action if the parameter mutation_num_genes exists.
+    parent_selection_type = "sss"  # Type of parent selection.
+    crossover_type = "single_point"  # Type of the crossover operator.
+    mutation_type = "random"  # Type of the mutation operator.
+    keep_parents = -1  # Number of parents to keep in the next population.
+    # -1 means keep all parents and 0 means keep nothing.
+    init_range_low = -2
+    init_range_high = 5
 
-num_parents_mating = 4  # Number of solutions to be selected as parents in the mating pool.
-
-num_generations = 500  # Number of generations.
-
-mutation_percent_genes = 5  # Percentage of genes to mutate. This parameter has no
-# action if the parameter mutation_num_genes exists.
-
-parent_selection_type = "sss"  # Type of parent selection.
-
-crossover_type = "single_point"  # Type of the crossover operator.
-
-mutation_type = "random"  # Type of the mutation operator.
-
-keep_parents = 1  # Number of parents to keep in the next population.
-# -1 means keep all parents and 0 means keep nothing.
-
-init_range_low = -2
-init_range_high = 5
 
 ga_instance = pygad.GA(num_generations=num_generations,
                        num_parents_mating=num_parents_mating,
@@ -137,6 +156,9 @@ if ga_instance.best_solution_generation != -1:
 predictions = pygad.nn.predict(last_layer=GANN_instance.population_networks[solution_idx],
                                data_inputs=data_inputs)
 print("Predictions of the trained network : {predictions}".format(predictions=predictions))
+
+# Save best solution
+save_population_networks("net2", 1, GANN_instance.population_networks)
 
 # Calculating some statistics
 num_wrong = numpy.where(predictions != data_outputs)[0]

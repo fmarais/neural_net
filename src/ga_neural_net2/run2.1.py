@@ -1,6 +1,7 @@
 import numpy
 import pygad.gann
 
+# https://github.com/ahmedfgad/GeneticAlgorithmPython
 # multiple inputs
 # single output
 

@@ -15,9 +15,9 @@ def to_single_line(input):
     return str(input).replace('\r', '').replace('\n', '')
 
 
-def load_weights(weights_name, weights_number):
-    return np.load("{}_weights{}.npy".format(weights_name, weights_number))
+def load_weights(name, number):
+    return np.load("{}_weights{}.npy".format(name, number))
 
 
-def save_weights(weights_name, weights_number, weights):
-    np.save("{}_weights{}.npy".format(weights_name, weights_number), weights)
+def save_weights(name, number, data):
+    np.save("{}_weights{}.npy".format(name, number), data)
